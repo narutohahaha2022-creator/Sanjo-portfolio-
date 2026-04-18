@@ -1,0 +1,705 @@
+<!DOCTYPE html><html lang="tl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sanjo Ohm Dupliko | 3D Portfolio</title>
+  <style>
+    :root {
+      --bg1: #050816;
+      --bg2: #0f172a;
+      --panel: rgba(15, 23, 42, 0.78);
+      --panel-2: rgba(30, 41, 59, 0.72);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --accent: #38bdf8;
+      --accent-2: #8b5cf6;
+      --success: #22c55e;
+      --shadow: 0 20px 50px rgba(0,0,0,.45);
+      --border: rgba(255,255,255,.12);
+      --glow: 0 0 20px rgba(56,189,248,.35);
+    }body.light {
+  --bg1: #e2e8f0;
+  --bg2: #f8fafc;
+  --panel: rgba(255,255,255,.78);
+  --panel-2: rgba(248,250,252,.82);
+  --text: #0f172a;
+  --muted: #334155;
+  --accent: #0284c7;
+  --accent-2: #7c3aed;
+  --border: rgba(15,23,42,.12);
+  --shadow: 0 20px 40px rgba(15,23,42,.14);
+  --glow: 0 0 22px rgba(2,132,199,.22);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 15% 20%, rgba(56,189,248,.18), transparent 20%),
+    radial-gradient(circle at 85% 15%, rgba(139,92,246,.18), transparent 22%),
+    radial-gradient(circle at 50% 80%, rgba(34,197,94,.12), transparent 25%),
+    linear-gradient(135deg, var(--bg1), var(--bg2));
+  transition: background .45s ease, color .45s ease;
+  overflow-x: hidden;
+}
+
+.bg-grid, .bg-orbs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(circle at center, black 45%, transparent 85%);
+  opacity: .22;
+}
+
+.orb {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  filter: blur(45px);
+  opacity: .22;
+  animation: floatOrb 8s ease-in-out infinite alternate;
+}
+
+.orb.one { top: 8%; left: -3%; background: #38bdf8; }
+.orb.two { top: 55%; right: -4%; background: #8b5cf6; animation-delay: 1.5s; }
+.orb.three { bottom: 4%; left: 35%; background: #22c55e; animation-delay: 3s; }
+
+@keyframes floatOrb {
+  from { transform: translateY(0) translateX(0) scale(1); }
+  to { transform: translateY(-20px) translateX(18px) scale(1.08); }
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.icon-btn, .theme-btn, .music-btn, .social-btn, .action-link {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+  transition: transform .25s ease, box-shadow .25s ease, background .3s ease;
+  cursor: pointer;
+}
+
+.icon-btn:hover, .theme-btn:hover, .music-btn:hover, .social-btn:hover, .action-link:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow), var(--glow);
+}
+
+.icon-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+}
+
+.hamburger {
+  width: 24px;
+  display: grid;
+  gap: 5px;
+}
+
+.hamburger span {
+  display: block;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--text);
+}
+
+.status-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.status-pill {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.status-pill strong { color: var(--text); }
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+.card {
+  position: relative;
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform .25s ease;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(255,255,255,.08), transparent 30%, transparent 70%, rgba(255,255,255,.06));
+  pointer-events: none;
+}
+
+.profile-card {
+  padding: 34px;
+  min-height: 530px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.avatar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.avatar {
+  width: 144px;
+  height: 144px;
+  border-radius: 30px;
+  object-fit: cover;
+  border: 2px solid rgba(255,255,255,.18);
+  box-shadow: 0 0 0 5px rgba(255,255,255,.04), 0 18px 40px rgba(0,0,0,.35);
+  transform: rotateY(-10deg) rotateX(4deg);
+}
+
+.meta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(56,189,248,.12);
+  border: 1px solid rgba(56,189,248,.28);
+  color: var(--text);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.name {
+  margin: 0;
+  font-size: clamp(2.1rem, 4vw, 4.25rem);
+  line-height: 1.02;
+  letter-spacing: .03em;
+  font-weight: 900;
+  background: linear-gradient(90deg, #ffffff, #7dd3fc, #c4b5fd, #ffffff);
+  background-size: 220% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: 0 0 28px rgba(125,211,252,.18);
+  animation: shine 4s linear infinite, popUp 2.2s ease-in-out infinite;
+}
+
+@keyframes shine {
+  to { background-position: 220% center; }
+}
+
+@keyframes popUp {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.01); }
+}
+
+.verify-wrap {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #38bdf8, #2563eb);
+  color: white;
+  box-shadow: 0 0 16px rgba(59,130,246,.45);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.headline {
+  margin: 18px 0 8px;
+  font-size: 1.1rem;
+  color: var(--muted);
+  max-width: 720px;
+}
+
+.bio {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.75;
+  font-size: 1rem;
+  max-width: 760px;
+}
+
+.actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+.social-btn, .action-link, .theme-btn, .music-btn {
+  padding: 14px 18px;
+  border-radius: 18px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.social-btn.primary {
+  background: linear-gradient(135deg, rgba(56,189,248,.22), rgba(139,92,246,.2));
+}
+
+.info-card {
+  padding: 28px;
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.mini {
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 18px;
+  min-height: 120px;
+  transform: translateZ(18px);
+}
+
+.mini .label {
+  font-size: 13px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.mini .value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.battery-bar {
+  position: relative;
+  width: 100%;
+  height: 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-top: 12px;
+  background: rgba(255,255,255,.06);
+}
+
+.battery-fill {
+  height: 100%;
+  width: 50%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #22c55e, #38bdf8);
+  transition: width .4s ease;
+}
+
+.section-title {
+  margin: 0 0 16px;
+  font-size: 1.25rem;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  left: -360px;
+  width: min(340px, 88vw);
+  height: 100vh;
+  background: linear-gradient(180deg, rgba(2,6,23,.94), rgba(15,23,42,.92));
+  border-right: 1px solid rgba(255,255,255,.12);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 24px 0 60px rgba(0,0,0,.35);
+  transition: left .35s ease;
+  z-index: 30;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+body.light .drawer {
+  background: linear-gradient(180deg, rgba(255,255,255,.94), rgba(226,232,240,.92));
+}
+
+.drawer.open { left: 0; }
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.drawer a {
+  display: block;
+  text-decoration: none;
+  color: var(--text);
+  padding: 15px 16px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  font-weight: 700;
+  transition: transform .22s ease, background .25s ease;
+}
+
+.drawer a:hover {
+  transform: translateX(4px);
+  background: rgba(56,189,248,.14);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.48);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s ease, visibility .3s ease;
+  z-index: 20;
+}
+
+.overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.footer-note {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+.glow-line {
+  height: 1px;
+  margin: 18px 0;
+  background: linear-gradient(90deg, transparent, rgba(56,189,248,.55), transparent);
+}
+
+.tiny {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 920px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-card {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .app { padding: 16px; }
+  .topbar { align-items: flex-start; flex-direction: column; }
+  .status-wrap { justify-content: flex-start; }
+  .info-grid { grid-template-columns: 1fr; }
+  .avatar { width: 120px; height: 120px; }
+  .profile-card, .info-card { padding: 22px; }
+}
+
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-orbs">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
+  </div>  <aside class="drawer" id="drawer">
+    <div class="drawer-header">
+      <h3 style="margin:0;">Quick Tools</h3>
+      <button class="icon-btn" id="closeDrawer" aria-label="Isara menu">✕</button>
+    </div>
+    <a href="https://snaptik.app/download-story-tiktok" target="_blank" rel="noopener noreferrer">Tiktok Downloader</a>
+    <a href="https://fdown.net/" target="_blank" rel="noopener noreferrer">Facebook Downloader</a>
+    <a href="https://en1.savefrom.net/1-youtube-video-downloader-16ge/" target="_blank" rel="noopener noreferrer">YouTube Downloader</a>
+    <a href="https://tempmail.so/" target="_blank" rel="noopener noreferrer">Temp Mail</a>
+    <div class="glow-line"></div>
+    <p class="tiny">Pindutin ang mga link para dumiretso sa mga website na gusto mo.</p>
+  </aside>
+  <div class="overlay" id="overlay"></div>  <main class="app">
+    <div class="topbar">
+      <button class="icon-btn" id="menuBtn" aria-label="Buksan menu">
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </button><div class="status-wrap">
+    <div class="status-pill">PH Time: <strong id="phTime">Loading...</strong></div>
+    <div class="status-pill">Battery: <strong id="batteryText">Checking...</strong></div>
+  </div>
+</div>
+
+<section class="hero">
+  <article class="card profile-card" id="tiltCard">
+    <div class="avatar-wrap">
+      <img class="avatar" src="https://www.image2url.com/r2/default/images/1776517751021-94c9f19b-25cd-431c-89bc-49c5d668889b.jpg" alt="Profile picture ni Sanjo Ohm Dupliko" />
+      <div>
+        <div class="meta-badge">⚡ 3D Personal Portfolio</div>
+        <div class="name-row">
+          <h1 class="name">Sanjo Ohm Dupliko</h1>
+          <span class="verify-wrap" aria-label="verified badges">
+            <span class="badge">✓</span>
+            <span class="badge">✓</span>
+          </span>
+        </div>
+        <p class="headline">Maangas na personal website na may 3D style, live PH time, battery status, menu drawer, at smooth animations.</p>
+      </div>
+    </div>
+
+    <p class="bio">
+      19 years old • From the Philippines • Tagalog na kalahati Bisaya at Waray.
+      Ito ang aking stylish portfolio website na may dark mode at white mode, animated intro,
+      at direct link sa aking Facebook account.
+    </p>
+
+    <div class="actions">
+      <a class="social-btn primary" href="https://www.facebook.com/rrreeeennnn" target="_blank" rel="noopener noreferrer">Open Facebook Profile</a>
+      <button class="theme-btn" id="themeToggle">Toggle Dark / White Mode</button>
+      <button class="music-btn" id="musicToggle">Play / Unmute Music</button>
+    </div>
+
+    <p class="footer-note">Tip: Click anywhere or pindutin ang music button para mag-play ang background music kung supported ng browser.</p>
+  </article>
+
+  <aside class="card info-card">
+    <h2 class="section-title">Profile Stats</h2>
+    <div class="info-grid">
+      <div class="mini">
+        <div class="label">Age</div>
+        <div class="value">19 Years Old</div>
+      </div>
+      <div class="mini">
+        <div class="label">Country</div>
+        <div class="value">Philippines</div>
+      </div>
+      <div class="mini">
+        <div class="label">Language / Roots</div>
+        <div class="value">Tagalog • Bisaya • Waray</div>
+      </div>
+      <div class="mini">
+        <div class="label">Mode</div>
+        <div class="value" id="modeText">Dark Mode</div>
+      </div>
+    </div>
+
+    <div class="mini">
+      <div class="label">Battery Level</div>
+      <div class="value" id="batteryPercent">Unknown</div>
+      <div class="battery-bar" aria-hidden="true">
+        <div class="battery-fill" id="batteryFill"></div>
+      </div>
+    </div>
+
+    <div class="mini">
+      <div class="label">Current Time in the Philippines</div>
+      <div class="value" id="phTimeLarge">Loading...</div>
+    </div>
+  </aside>
+</section>
+
+<audio id="bgmusic" autoplay loop muted>
+  <source src="https://jumpshare.com/s/vF3eosGWmE6agGD4iIPn" type="audio/mpeg" />
+</audio>
+
+  </main>  <script>
+    const body = document.body;
+    const menuBtn = document.getElementById('menuBtn');
+    const closeDrawer = document.getElementById('closeDrawer');
+    const drawer = document.getElementById('drawer');
+    const overlay = document.getElementById('overlay');
+    const themeToggle = document.getElementById('themeToggle');
+    const musicToggle = document.getElementById('musicToggle');
+    const music = document.getElementById('bgmusic');
+    const phTime = document.getElementById('phTime');
+    const phTimeLarge = document.getElementById('phTimeLarge');
+    const batteryText = document.getElementById('batteryText');
+    const batteryPercent = document.getElementById('batteryPercent');
+    const batteryFill = document.getElementById('batteryFill');
+    const modeText = document.getElementById('modeText');
+    const tiltCard = document.getElementById('tiltCard');
+
+    function openDrawer() {
+      drawer.classList.add('open');
+      overlay.classList.add('show');
+    }
+
+    function closeMenu() {
+      drawer.classList.remove('open');
+      overlay.classList.remove('show');
+    }
+
+    menuBtn.addEventListener('click', openDrawer);
+    closeDrawer.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+
+    const savedTheme = localStorage.getItem('sanjo-theme');
+    if (savedTheme === 'light') {
+      body.classList.add('light');
+      modeText.textContent = 'White Mode';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('light');
+      const isLight = body.classList.contains('light');
+      modeText.textContent = isLight ? 'White Mode' : 'Dark Mode';
+      localStorage.setItem('sanjo-theme', isLight ? 'light' : 'dark');
+    });
+
+    function updatePHTime() {
+      const now = new Date();
+      const options = {
+        timeZone: 'Asia/Manila',
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+      };
+      const timeOnly = new Intl.DateTimeFormat('en-PH', {
+        timeZone: 'Asia/Manila',
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      }).format(now);
+      const full = new Intl.DateTimeFormat('en-PH', options).format(now);
+      phTime.textContent = timeOnly;
+      phTimeLarge.textContent = full;
+    }
+    updatePHTime();
+    setInterval(updatePHTime, 1000);
+
+    async function updateBattery() {
+      if (!('getBattery' in navigator)) {
+        batteryText.textContent = 'Not supported';
+        batteryPercent.textContent = 'Battery API not supported';
+        batteryFill.style.width = '25%';
+        return;
+      }
+
+      try {
+        const battery = await navigator.getBattery();
+        const refreshBattery = () => {
+          const level = Math.round(battery.level * 100);
+          const charging = battery.charging ? ' • Charging' : '';
+          batteryText.textContent = `${level}%${charging}`;
+          batteryPercent.textContent = `${level}%${charging}`;
+          batteryFill.style.width = `${level}%`;
+        };
+        refreshBattery();
+        battery.addEventListener('levelchange', refreshBattery);
+        battery.addEventListener('chargingchange', refreshBattery);
+      } catch (error) {
+        batteryText.textContent = 'Unavailable';
+        batteryPercent.textContent = 'Battery info unavailable';
+      }
+    }
+    updateBattery();
+
+    async function startMusic() {
+      try {
+        music.muted = false;
+        await music.play();
+      } catch (err) {
+        console.log('Autoplay blocked until user interaction.');
+      }
+    }
+
+    document.addEventListener('click', function () {
+      startMusic();
+    }, { once: true });
+
+    musicToggle.addEventListener('click', startMusic);
+
+    tiltCard.addEventListener('mousemove', (e) => {
+      const rect = tiltCard.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const rotateY = ((x / rect.width) - 0.5) * 10;
+      const rotateX = ((y / rect.height) - 0.5) * -10;
+      tiltCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    tiltCard.addEventListener('mouseleave', () => {
+      tiltCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+    });
+  </script></body>
+</html>
